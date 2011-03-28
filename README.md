@@ -51,10 +51,14 @@ Emitted when a user logs in.
 
 Emitted when a user logs out or disconnects for some reason.
 
-### `minecraft.say(msg)`
+### minecraft.say
+
+`minecraft.say(msg)`
 
 Send a message to the server.
 
-### `minecraft.command(cmd)`
+### minecraft.command
+
+`minecraft.command(cmd)`
 
 Run a command on the server.
