@@ -26,11 +26,15 @@ function Minecraft() {
 		}
 		o = line.match(/^\[CONSOLE\] (.*)/);
 		if (o) {
-			var msg = o[1];
-			if (swallowlines[msg]) {
-				var latency = new Date().getTime() - swallowlines[msg].getTime();
+			var msg = o[1], msgtrim = msg.replace(/ +$/, '');
+			// as of 2011-03-28 minecraft_server.jar trims trailing spaces, but trim
+			// it just to be consistent with minecraft.say(msg)
+
+			if (swallowlines[msgtrim]) {
+				// we sent this message ourselves, so don't "echo" it as an event
+				var latency = new Date().getTime() - swallowlines[msgtrim].getTime();
 				self.emit("latency", latency);
-				delete swallowlines[msg];
+				delete swallowlines[msgtrim];
 			} else {
 				self.emit("consolemessage", msg);
 			}
@@ -57,6 +61,7 @@ Minecraft.prototype.command = function (cmd) {
 	this.sock.write(cmd+'\n');
 };
 Minecraft.prototype.say = function (msg) {
+	msg = msg.replace(/ +$/, '');
 	swallowlines[msg] = new Date;
 	this.command('say '+msg);
 };
